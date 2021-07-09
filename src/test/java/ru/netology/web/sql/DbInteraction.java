@@ -36,7 +36,7 @@ public class DbInteraction {
     public static String getCode() {
         try (val conn = getConnection();
              val countStmt = conn.createStatement()) {
-            val sql = "SELECT code FROM auth_codes ORDER BY created DESC LIMIT 2";
+            val sql = "SELECT code FROM auth_codes ORDER BY created DESC LIMIT 1";
             val resultSet = countStmt.executeQuery(sql);
             if (resultSet.next()) {
                 return resultSet.getString("code");
