@@ -1,8 +1,7 @@
 package ru.netology.web.test;
 
-import com.codeborne.selenide.Selenide;
 import lombok.val;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.web.data.DataHelper;
@@ -16,8 +15,11 @@ public class AuthorizationTest {
     @BeforeEach
     void setUp() {
         open("http://localhost:9999");
-        Selenide.clearBrowserCookies();
-        Selenide.clearBrowserLocalStorage();
+    }
+
+    @AfterAll
+    static void cleanDb() {
+        DbInteraction.deleteTables();
     }
 
     @Test
@@ -25,10 +27,20 @@ public class AuthorizationTest {
         LoginPage loginPage = new LoginPage();
         val authInfo = DataHelper.getAuthInfo();
         val verificationPage = loginPage.validLogin(authInfo);
+        verificationPage.validVerify(DbInteraction.getCode());
     }
 
-    @AfterEach
-    void cleanDb() {
-        DbInteraction.deleteTables();
+    @Test
+    void shouldGetBlockMessage() {
+        val loginPage = new LoginPage();
+        val authInfo = DataHelper.getAuthInfoInvalid();
+        loginPage.login(authInfo);
+        loginPage.getInvalidLogin();
+        loginPage.cleaning();
+        loginPage.login(authInfo);
+        loginPage.getInvalidLogin();
+        loginPage.cleaning();
+        loginPage.login(authInfo);
+        loginPage.getBlockedMessage();
     }
 }

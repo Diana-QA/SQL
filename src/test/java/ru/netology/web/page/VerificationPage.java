@@ -13,10 +13,10 @@ public class VerificationPage {
         codeField.shouldBe(Condition.visible);
     }
 
-    public DashboardPage validVerify(String code) {
+    public void validVerify(String code) {
         codeField.setValue(code);
         verifyButton.click();
-        return new DashboardPage();
+        new DashboardPage();
     }
 
 }

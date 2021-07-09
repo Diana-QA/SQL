@@ -20,6 +20,13 @@ public class LoginPage {
         return new VerificationPage();
     }
 
+    public void login(DataHelper.AuthInfo loginInfo) {
+        loginField.setValue(loginInfo.getLogin());
+        passwordField.setValue(loginInfo.getPassword());
+        loginButton.click();
+
+    }
+
     public void getInvalidLogin() {
         errorNotification.shouldBe(Condition.visible).shouldHave(Condition.text("Ошибка! "));
     }

@@ -10,9 +10,8 @@ import java.sql.SQLException;
 
 public class DbInteraction {
     public static Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(
+        return DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/app", "app", "pass");
-        return connection;
     }
 
     @SneakyThrows
@@ -31,5 +30,18 @@ public class DbInteraction {
             runner.update(conn, cards);
             runner.update(conn, users);
         }
+    }
+
+    @SneakyThrows
+    public static String getCode() {
+        try (val conn = getConnection();
+             val countStmt = conn.createStatement()) {
+            val sql = "SELECT code FROM auth_codes ORDER BY created DESC LIMIT 2";
+            val resultSet = countStmt.executeQuery(sql);
+            if (resultSet.next()) {
+                return resultSet.getString("code");
+            }
+        }
+        return null;
     }
 }
